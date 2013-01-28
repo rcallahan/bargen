@@ -2,6 +2,9 @@
 
 #ifndef _LOOKUP_H
 #define _LOOKUP_H
+/*
+ * a quick look up table for converting a number with 4 NT bases 
+ * */
 char lookuptab[256][4]=
 {
 "AAAA","AAAC","AAAG","AAAT","AACA","AACC","AACG","AACT",
@@ -38,8 +41,11 @@ char lookuptab[256][4]=
 "TTGA","TTGC","TTGG","TTGT","TTTA","TTTC","TTTG","TTTT",
 };
 #endif
-
+/*
+ * string to int64_t numbers convertor
+ * */
 int64_t cton(char *s){
+	//not work with more than 32 chars 
 	if (strlen(s)>32) return UINT64MAX;
 	int64_t d, i, sz=strlen(s);
 	int64_t rst=0;
@@ -76,7 +82,10 @@ int64_t cton(char *s){
 #define HI6	0x000000000000ff00UL
 #define HI7	0x00000000000000ffUL
 uint64_t tab[8]={  HI0,HI1,HI2,HI3,HI4,HI5,HI6,HI7 } ;
-
+/*
+ *number to string convert function using lookup table
+* not too useful
+ * */
 char * _ntoc_aux( int64_t num, int64_t sz){ 
 	int bytes =8;
 	int i =0,j=0,k=0;
@@ -96,6 +105,10 @@ char * _ntoc_aux( int64_t num, int64_t sz){
 	out[sz]='\0';	
 	return out;	
 }
+/*
+ * number to NT string  
+ * */
+
 char * ntoc( int64_t num, int64_t sz){ //number to a sequence
 	if (sz>32)return NULL;
 	int64_t c, i ;

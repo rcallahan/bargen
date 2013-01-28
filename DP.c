@@ -1,6 +1,11 @@
 #include "DP.h"
 #include <time.h>
 #define ABS(x) (((x)<0)?(-1*(x)):(x) )
+/*
+ *solution_init
+ * creation of solutions.
+ * solutions saving only numbers in array
+ * */
 solution_t *solution_init(int n, int bz){
 	solution_t * s=(solution_t *) calloc(1, sizeof(solution_t));
 	s->n=n;
@@ -8,7 +13,17 @@ solution_t *solution_init(int n, int bz){
 	s->bz=bz;
 	s->s=(int *)calloc(s->n,sizeof(int) );
 }
-
+/*
+ *balance: taking a set of barcode from  solution_t* to re-organize the order
+ * so that barcodes coming out the order of balanced at first N bases
+ * parameters:
+ *	nb:  number of barcode needs to balanced 
+ *	ib: left most N bases of barcodes need to balanced
+ *	bvalret: values used for balancing bias
+ *	ss: solution_t * for barcode candidates
+ * return : 
+ * 	an array save balanced order of digital barcodes 
+ * */
 int * balance(int nb, /*number of bars need to balance*/
 	 int ib ,/*first ib bases need to balance*/
 	int *bvalret, /*min balanced value return */
@@ -199,6 +214,7 @@ inline    int _dist( const int a, int  bz, int mm,solution_t  const *  ss){
 	char *ibuff=(char *)malloc(sizeof(char)*(bz+1));
 	for (i=0;i<ss->m;++i){
 		//int d=_FD(a, ss->s[i] ,bz) ;
+		//switch with FD/ED to using different algorithm 
 		int d=ED(_ntoc(a,bz, ibuff) , _ntoc(ss->s[i] ,bz,abuff)) ;
 		if (d < mm){ 
 			exceed=1;
@@ -221,7 +237,18 @@ void solution_print(solution_t *ss)
 	}
 	free(sbuff);
 }
-
+/*
+ * solve:
+ * precompute all barcodes using digital representation 
+ * remote all barcodes in this pool not satisfy restritions 
+ * parameters:
+ * 	bz: barcode length for desgin
+ * 	mm: mismatches allowed each other
+ *	strict: restritions
+ * return : 
+ * 	solutions_t * a list of barcode satisfied all criteria
+ *
+ * */
 solution_t * solve(
 	int bz ,/*barsize*/ 
 	int mm,/*Number of mismatches*/ 

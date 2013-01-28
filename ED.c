@@ -1,4 +1,8 @@
 #include "ED.h"
+/*
+ * hamming distance for compare two strings with same length
+ * 
+ * */
 uint64_t FD(char *s1, int64_t sz1 ,char *s2){
 	
 	uint64_t i, score=0;
@@ -7,6 +11,11 @@ uint64_t FD(char *s1, int64_t sz1 ,char *s2){
 	}
 	return score;
 }
+/*
+ * edit distance 
+ * for compare two strings with same length
+ * note: the highest length allowed is 32 to fit digital barcode need
+ */
 int  ED(char *s1, char *s2){
 	int64_t sz1=strlen(s1);
 	int64_t sz2=strlen(s2);

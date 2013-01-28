@@ -1,3 +1,8 @@
+/*
+ * using 64 bits integer represent  ACGT strings.
+ * note: only support 32 bases or less barcode design		
+ *
+ * */
 #ifndef _BARGEN_DIGIT_H
 #define _BARGEN_DIGIT_H
 #include <inttypes.h>

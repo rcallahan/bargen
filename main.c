@@ -25,19 +25,22 @@ int main(int64_t argc, char *argv[]){
 	while((c=getopt(argc, argv, "b:m:N:B:S:"))!=-1){
 		switch(c){
 
-			case 'b':
+			case 'b': /*barcode length to use*/
 				bz=atoi(optarg);	
 				break;
-			case 'm':
+			case 'm': /*mismatches*/
 				mm=atoi(optarg);	
 				break;
-			case 'N':
+			case 'N': /*how many barcode from this pool need to balance*/
 				nb=atoi(optarg);	
 				break;
-			case 'B':
+			case 'B': /*number of bases from left to right need to balacned*/
+				 /*This could fail execution  if number is too large ,because it cannot being done*/
 				ib=atoi(optarg);	
 				break;
-			case 'S':
+			case 'S': /*
+				*definition of restritions see above useage function
+				*/
 				strict=atoi(optarg);	
 				break;
 			case '?':
@@ -50,20 +53,24 @@ int main(int64_t argc, char *argv[]){
 		}		
 	}
 	fprintf(stderr, "b %d m %d N %d B %d S %d\n", bz, mm, nb,ib, strict);
+	/*stop if any input parameter is zero*/
 	if(  ( bz==0 || mm==0 || nb==0 ||ib==0)) usage();	
 	srand(time(NULL));
+	//load all digital barcodes into solution for later compute
 	solution_t *ss=solve(  bz, mm, strict);	
 	int bval;
-	int runs=100;
+	int runs=100; //number of runs for gererating the barcode lib
 	int mins[runs];
 	{
 		int i, min_i;
 		int ** vecs=(int **) malloc(sizeof(int*)*runs);
+		//dynamicall choose a start barcode and start balancing 
 		for(i=0;i<runs;++i){	
 			int *bl=balance( nb, ib, &bval, ss);
 			vecs[i]=bl;
 			mins[i]=bval;
 		}
+		//save the least bias into array
 		int min=10000;
 		for(i=0;i<runs;++i){
 			if (mins[i]<min){
@@ -73,6 +80,7 @@ int main(int64_t argc, char *argv[]){
 		}	
 		fprintf(stderr, "Min Balanced Value %d\n",min);
 		int cnt[ib][4];
+		//taking the min bias value , print out
 		int *vec=vecs[min_i];	
 		{
 			int i, j, ibn;
@@ -91,7 +99,7 @@ int main(int64_t argc, char *argv[]){
 				}while(j<ss->bz && ibn<ib);
 			}
 		}	
-		{///check balance
+		{///print  balance status
 			int i, j;
 			for(i=0;i<ib;++i){
 				for(j=0;j<4;j++){
@@ -103,11 +111,13 @@ int main(int64_t argc, char *argv[]){
 		{///print best balanced
 			int i;
 			char *sbuff=(char *)malloc(sizeof(char)*(bz+1));
+			//barcodes balanced 
 			fprintf(stderr,"##############%d Balanced##############\n",nb);
 			for(i=0;i<ss->m;++i){
 				if (vecs[min_i][i]==1)
 					printf("%s\n",_ntoc( ss->s[i], bz, sbuff));
 			}
+			//barcodes remained in pool
 			fprintf(stderr,"##############%d remains##############\n",ss->m-nb) ;
 			
 			for(i=0;i<ss->m;++i){
