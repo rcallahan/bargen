@@ -49,6 +49,19 @@ run:
 		-N number of barcodes need to be balanced
 		-B number of bases need to be balanced
 		-S [optional] strict number, 7 : everything, 3: no trimer,1: no dimer , 0 : no neartri	
+main functions:
+	bargen_digit.h  //using number to represent ACGT string
+		ntoc  number to string
+		cton  string to number 
+	ED.h
+		FD	hamming distance over two same length string
+		ED	edit distance over two same length string
+	DP.h
+		solve	produce barcode pool based on mismatches/homopolymer/dimer/nearhomopolymer
+		balance re-organize the order of barcode pool so that the first N bases balanced over ACTG
+		_ishomo
+		_isNearHomo
+		_isDimer
 
 Author: 
 	Jingtao Liu@EG
